@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/app_state.dart';
 import '../widgets/bottom_nav.dart';
+import '../widgets/gradient_background.dart';
 
 class RecoverScreen extends StatelessWidget {
   const RecoverScreen({super.key});
@@ -11,14 +12,35 @@ class RecoverScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = context.watch<AppState>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Recover')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            ShaderMask(
+              shaderCallback: (rect) => const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF7C3AED),
+                  Color(0xFFD946EF),
+                  Color(0xFF06B6D4),
+                ],
+              ).createShader(rect),
+              child: const Icon(Icons.favorite, color: Colors.white),
+            ),
+            const SizedBox(width: 8),
+            const Text('Recover'),
+          ],
+        ),
+      ),
       bottomNavigationBar: const BottomNav(current: 2),
       body: SafeArea(
-        child: ListView(
-          children: [
-            const _Tabs(),
-            if (app.carePath != null) const _TodayCard(),
-          ],
+        child: GradientBackground(
+          child: ListView(
+            children: [
+              const _Tabs(),
+              if (app.carePath != null) const _TodayCard(),
+            ],
+          ),
         ),
       ),
     );
@@ -36,11 +58,28 @@ class _TabsState extends State<_Tabs> with TickerProviderStateMixin {
   late final TabController _controller = TabController(length: 4, vsync: this);
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Column(
       children: [
         TabBar(
           controller: _controller,
           isScrollable: true,
+          indicator: ShapeDecoration(
+            shape: StadiumBorder(
+              side: BorderSide(color: scheme.primaryContainer, width: 0),
+            ),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF7C3AED),
+                Color(0xFFD946EF),
+                Color(0xFF06B6D4),
+              ],
+            ),
+          ),
+          labelColor: scheme.onPrimaryContainer,
+          unselectedLabelColor: scheme.onSurfaceVariant,
           tabs: const [
             Tab(text: 'Breakup'),
             Tab(text: 'Layoff'),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/task.dart';
 import '../providers/app_state.dart';
 import '../widgets/bottom_nav.dart';
+import '../widgets/gradient_background.dart';
 
 class PlanScreen extends StatelessWidget {
   const PlanScreen({super.key});
@@ -14,16 +15,37 @@ class PlanScreen extends StatelessWidget {
     final List<Task> suggestions =
         app.scheduledTasks.isEmpty ? <Task>[] : app.scheduledTasks;
     return Scaffold(
-      appBar: AppBar(title: const Text('Plan')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            ShaderMask(
+              shaderCallback: (rect) => const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF7C3AED),
+                  Color(0xFFD946EF),
+                  Color(0xFF06B6D4),
+                ],
+              ).createShader(rect),
+              child: const Icon(Icons.schedule, color: Colors.white),
+            ),
+            const SizedBox(width: 8),
+            const Text('Plan'),
+          ],
+        ),
+      ),
       bottomNavigationBar: const BottomNav(current: 1),
       body: SafeArea(
-        child: ListView(
-          children: [
-            const _ActivitySelector(),
-            const SizedBox(height: 8),
-            _SuggestionsList(
-                tasks: suggestions.isEmpty ? _mockFromApp(app) : suggestions),
-          ],
+        child: GradientBackground(
+          child: ListView(
+            children: [
+              const _ActivitySelector(),
+              const SizedBox(height: 8),
+              _SuggestionsList(
+                  tasks: suggestions.isEmpty ? _mockFromApp(app) : suggestions),
+            ],
+          ),
         ),
       ),
     );

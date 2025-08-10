@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/bottom_nav.dart';
+import '../widgets/gradient_background.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -15,10 +16,31 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Community')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            ShaderMask(
+              shaderCallback: (rect) => const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF7C3AED),
+                  Color(0xFFD946EF),
+                  Color(0xFF06B6D4),
+                ],
+              ).createShader(rect),
+              child: const Icon(Icons.groups, color: Colors.white),
+            ),
+            const SizedBox(width: 8),
+            const Text('Community'),
+          ],
+        ),
+      ),
       bottomNavigationBar: const BottomNav(current: 4),
       body: SafeArea(
-        child: optedIn ? _feed(context) : _gate(context),
+        child: GradientBackground(
+          child: optedIn ? _feed(context) : _gate(context),
+        ),
       ),
       floatingActionButton: optedIn
           ? FloatingActionButton.extended(
@@ -56,8 +78,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
         Wrap(
           spacing: 8,
           children: prompts
-              .map((p) =>
-                  ActionChip(label: Text(p), onPressed: () => posts.add(p)))
+              .map((p) => ActionChip(
+                    label: Text(p),
+                    onPressed: () => setState(() => posts.add(p)),
+                  ))
               .toList(),
         ),
         const Divider(),

@@ -8,6 +8,7 @@ class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
+      labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       selectedIndex: current,
       onDestinationSelected: (i) {
         switch (i) {
